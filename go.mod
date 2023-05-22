@@ -1,6 +1,6 @@
-module github.com/taigrr/elevenlabs
+module github.com/getcohesive/elevenlabs
 
-go 1.20
+go 1.19
 
 require github.com/faiface/beep v1.1.0
 

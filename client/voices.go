@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -12,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/taigrr/elevenlabs/client/types"
+	"github.com/getcohesive/elevenlabs/client/types"
 )
 
 func (c Client) CreateVoice(ctx context.Context, name, description string, labels []string, files []*os.File) error {
@@ -41,7 +40,7 @@ func (c Client) CreateVoice(ctx context.Context, name, description string, label
 	}
 	req.Header.Set("Content-Type", w.FormDataContentType())
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
 	switch res.StatusCode {
@@ -57,12 +56,7 @@ func (c Client) CreateVoice(ctx context.Context, name, description string, label
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
+		err := json.NewDecoder(res.Body).Decode(&ve)
 		return err
 	}
 }
@@ -75,7 +69,7 @@ func (c Client) DeleteVoice(ctx context.Context, voiceID string) error {
 		return err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
 	switch res.StatusCode {
@@ -91,12 +85,7 @@ func (c Client) DeleteVoice(ctx context.Context, voiceID string) error {
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
+		err = json.NewDecoder(res.Body).Decode(&ve)
 		return err
 	}
 }
@@ -111,34 +100,26 @@ func (c Client) EditVoiceSettings(ctx context.Context, voiceID string, settings 
 		return err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
 	switch res.StatusCode {
 	case 401:
 		return ErrUnauthorized
 	case 200:
-		if err != nil {
-			return err
-		}
 		so := types.SynthesisOptions{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&so)
-		if jerr != nil {
-			return jerr
-		}
+		err = json.NewDecoder(res.Body).Decode(&so)
+		return err
 		return nil
-	case 422:
-		fallthrough
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
+		err := json.NewDecoder(res.Body).Decode(&ve)
 		return err
 	}
 }
@@ -169,9 +150,13 @@ func (c Client) EditVoice(ctx context.Context, voiceID, name, description string
 	}
 	req.Header.Set("Content-Type", w.FormDataContentType())
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
 	switch res.StatusCode {
 	case 401:
 		return ErrUnauthorized
@@ -185,12 +170,7 @@ func (c Client) EditVoice(ctx context.Context, voiceID, name, description string
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
+		err := json.NewDecoder(res.Body).Decode(&ve)
 		return err
 	}
 }
@@ -203,7 +183,7 @@ func (c Client) defaultVoiceSettings(ctx context.Context) (types.SynthesisOption
 		return types.SynthesisOptions{}, err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
 	switch res.StatusCode {
@@ -225,17 +205,13 @@ func (c Client) defaultVoiceSettings(ctx context.Context) (types.SynthesisOption
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
+		err := json.NewDecoder(res.Body).Decode(&ve)
 		return types.SynthesisOptions{}, err
 	}
 }
 
 func (c Client) GetVoiceSettings(ctx context.Context, voiceID string) (types.SynthesisOptions, error) {
+	so := types.SynthesisOptions{}
 	url := fmt.Sprintf(c.endpoint+"/v1/voices/%s/settings", voiceID)
 	client := &http.Client{}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -243,39 +219,30 @@ func (c Client) GetVoiceSettings(ctx context.Context, voiceID string) (types.Syn
 		return types.SynthesisOptions{}, err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
+	if err != nil {
+		return so, err
+	}
+
 	switch res.StatusCode {
 	case 401:
 		return types.SynthesisOptions{}, ErrUnauthorized
 	case 200:
-		if err != nil {
-			return types.SynthesisOptions{}, err
-		}
-		so := types.SynthesisOptions{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&so)
-		if jerr != nil {
-			return types.SynthesisOptions{}, jerr
-		}
-		return so, nil
-	case 422:
-		fallthrough
+		err = json.NewDecoder(res.Body).Decode(&so)
+		return so, err
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
+		err := json.NewDecoder(res.Body).Decode(&ve)
 		return types.SynthesisOptions{}, err
 	}
 }
 
 func (c Client) GetVoice(ctx context.Context, voiceID string) (types.VoiceResponseModel, error) {
+	vrm := types.VoiceResponseModel{}
 	url := fmt.Sprintf(c.endpoint+"/v1/voices/%s", voiceID)
 	client := &http.Client{}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -283,36 +250,25 @@ func (c Client) GetVoice(ctx context.Context, voiceID string) (types.VoiceRespon
 		return types.VoiceResponseModel{}, err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
+	if err != nil {
+		return vrm, err
+	}
+
 	switch res.StatusCode {
 	case 401:
-		return types.VoiceResponseModel{}, ErrUnauthorized
+		return vrm, ErrUnauthorized
 	case 200:
-		if err != nil {
-			return types.VoiceResponseModel{}, err
-		}
-
-		vrm := types.VoiceResponseModel{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&vrm)
-		if jerr != nil {
-			return types.VoiceResponseModel{}, jerr
-		}
-		return vrm, nil
-	case 422:
-		fallthrough
+		err = json.NewDecoder(res.Body).Decode(&vrm)
+		return vrm, err
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return types.VoiceResponseModel{}, err
+		err = json.NewDecoder(res.Body).Decode(&ve)
+		return vrm, err
 
 	}
 }
@@ -325,7 +281,7 @@ func (c Client) GetVoices(ctx context.Context) ([]types.VoiceResponseModel, erro
 		return []types.VoiceResponseModel{}, err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/taigrr/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
 	switch res.StatusCode {
@@ -347,12 +303,7 @@ func (c Client) GetVoices(ctx context.Context) ([]types.VoiceResponseModel, erro
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
+		err := json.NewDecoder(res.Body).Decode(&ve)
 		return []types.VoiceResponseModel{}, err
 	}
 }
