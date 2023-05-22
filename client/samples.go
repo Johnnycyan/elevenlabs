@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -39,13 +38,8 @@ func (c Client) DeleteVoiceSample(ctx context.Context, voiceID, sampleID string)
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return false, err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return false, ve
 	}
 }
 
@@ -76,13 +70,8 @@ func (c Client) DownloadVoiceSampleWriter(ctx context.Context, w io.Writer, voic
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return ve
 	}
 }
 
@@ -116,12 +105,7 @@ func (c Client) DownloadVoiceSample(ctx context.Context, voiceID, sampleID strin
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return []byte{}, err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return nil, ve
 	}
 }

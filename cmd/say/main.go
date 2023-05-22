@@ -30,7 +30,7 @@ func main() {
 	text := string(b)
 
 	go func() {
-		err = client.TTSStream(ctx, pipeWriter, text, ids[0], types.SynthesisOptions{Stability: 0.75, SimilarityBoost: 0.75})
+		err = client.TTSStream(ctx, pipeWriter, text, ids[0], "21m00Tcm4TlvDq8ikWAM", types.SynthesisOptions{Stability: 0.75, SimilarityBoost: 0.75})
 		if err != nil {
 			panic(err)
 		}

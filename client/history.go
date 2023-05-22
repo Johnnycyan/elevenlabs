@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -39,13 +38,8 @@ func (c Client) HistoryDelete(ctx context.Context, historyItemID string) (bool, 
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return false, err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return false, ve
 	}
 }
 
@@ -83,13 +77,8 @@ func (c Client) HistoryDownloadZipWriter(ctx context.Context, w io.Writer, id1, 
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return ve
 	}
 }
 
@@ -130,13 +119,8 @@ func (c Client) HistoryDownloadZip(ctx context.Context, id1, id2 string, additio
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return []byte{}, err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return nil, ve
 	}
 }
 
@@ -167,13 +151,8 @@ func (c Client) HistoryDownloadAudioWriter(ctx context.Context, w io.Writer, ID 
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return ve
 	}
 }
 
@@ -207,13 +186,8 @@ func (c Client) HistoryDownloadAudio(ctx context.Context, ID string) ([]byte, er
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return []byte{}, err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return nil, ve
 	}
 }
 
@@ -249,13 +223,8 @@ func (c Client) GetHistoryItemList(ctx context.Context) ([]types.HistoryItemList
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return []types.HistoryItemList{}, err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return nil, ve
 	}
 }
 

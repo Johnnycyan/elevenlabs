@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/getcohesive/elevenlabs/client/types"
@@ -41,13 +40,8 @@ func (c Client) GetUserInfo(ctx context.Context) (types.UserResponseModel, error
 	default:
 		ve := types.ValidationError{}
 		defer res.Body.Close()
-		jerr := json.NewDecoder(res.Body).Decode(&ve)
-		if jerr != nil {
-			err = errors.Join(err, jerr)
-		} else {
-			err = errors.Join(err, ve)
-		}
-		return types.UserResponseModel{}, err
+		_ = json.NewDecoder(res.Body).Decode(&ve)
+		return types.UserResponseModel{}, ve
 	}
 }
 
