@@ -36,6 +36,8 @@ func (so *SynthesisOptions) Clamp() {
 type SynthesisOptions struct {
 	Stability       float64 `json:"stability"`
 	SimilarityBoost float64 `json:"similarity_boost"`
+	Format          string  `json:"format"`
+	Style           float64 `json:"style"`
 }
 
 type ExtendedSubscriptionResponseModel struct {

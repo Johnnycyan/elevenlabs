@@ -1,4 +1,4 @@
-module github.com/getcohesive/elevenlabs
+module github.com/Johnnycyan/elevenlabs
 
 go 1.19
 

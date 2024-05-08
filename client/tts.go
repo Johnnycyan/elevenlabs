@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/getcohesive/elevenlabs/client/types"
+	"github.com/Johnnycyan/elevenlabs/client/types"
 )
 
 func (c Client) TTSWriter(ctx context.Context, w io.Writer, text, modelID, voiceID string, options types.SynthesisOptions) error {
@@ -27,7 +27,7 @@ func (c Client) TTSWriter(ctx context.Context, w io.Writer, text, modelID, voice
 		return err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/Johnnycyan/elevenlabs")
 	req.Header.Set("accept", "audio/mpeg")
 	res, err := client.Do(req)
 	if err != nil {
@@ -56,7 +56,7 @@ func (c Client) TTSWriter(ctx context.Context, w io.Writer, text, modelID, voice
 
 func (c Client) TTS(ctx context.Context, text, voiceID, modelID string, options types.SynthesisOptions) ([]byte, error) {
 	options.Clamp()
-	url := fmt.Sprintf(c.endpoint+"/v1/text-to-speech/%s", voiceID)
+	url := fmt.Sprintf(c.endpoint+"/v1/text-to-speech/%s?output_format=%s", voiceID, options.Format)
 	client := &http.Client{}
 	opts := types.TTS{
 		Text:          text,
@@ -69,7 +69,7 @@ func (c Client) TTS(ctx context.Context, text, voiceID, modelID string, options 
 		return nil, err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/Johnnycyan/elevenlabs")
 	req.Header.Set("accept", "audio/mpeg")
 	res, err := client.Do(req)
 	if err != nil {
@@ -115,7 +115,7 @@ func (c Client) TTSStream(ctx context.Context, w io.Writer, text, modelID, voice
 		return err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/Johnnycyan/elevenlabs")
 	req.Header.Set("accept", "audio/mpeg")
 	res, err := client.Do(req)
 	if err != nil {

@@ -12,8 +12,8 @@ import (
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 
-	"github.com/getcohesive/elevenlabs/client"
-	"github.com/getcohesive/elevenlabs/client/types"
+	"github.com/Johnnycyan/elevenlabs/client"
+	"github.com/Johnnycyan/elevenlabs/client/types"
 )
 
 func main() {

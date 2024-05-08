@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/getcohesive/elevenlabs/client/types"
+	"github.com/Johnnycyan/elevenlabs/client/types"
 )
 
 func (c Client) GetUserInfo(ctx context.Context) (types.UserResponseModel, error) {
@@ -16,7 +16,7 @@ func (c Client) GetUserInfo(ctx context.Context) (types.UserResponseModel, error
 		return types.UserResponseModel{}, err
 	}
 	req.Header.Set("xi-api-key", c.apiKey)
-	req.Header.Set("User-Agent", "github.com/getcohesive/elevenlabs")
+	req.Header.Set("User-Agent", "github.com/Johnnycyan/elevenlabs")
 	req.Header.Set("accept", "application/json")
 	res, err := client.Do(req)
 
