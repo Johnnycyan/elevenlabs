@@ -1,6 +1,6 @@
 # elevenlabs
 [![License 0BSD](https://img.shields.io/badge/License-0BSD-pink.svg)](https://opensource.org/licenses/0BSD)
-[![GoDoc](https://godoc.org/github.com/taigrr/elevenlabs?status.svg)](https://godoc.org/github.com/taigrr/elevenlabs)
+[![GoDoc](https://godoc.org/github.com/johnnycyan/elevenlabs?status.svg)](https://godoc.org/github.com/johnnycyan/elevenlabs)
 [![Go Mod](https://img.shields.io/badge/go.mod-v1.20-blue)](go.mod)
 [![Go Report Card](https://goreportcard.com/badge/github.com/taigrr/elevenlabs?branch=master)](https://goreportcard.com/report/github.com/taigrr/elevenlabs)
 
@@ -24,7 +24,7 @@ After creating your account, you can get your API key [from here](https://help.e
 
 To test out an example `say` program, run:
 
-`go install github.com/taigrr/elevenlabs/cmd/say@latest`
+`go install github.com/johnnycyan/elevenlabs/cmd/say@latest`
 
 Set the `XI_API_KEY` environment variable, and pipe it some text to give it a whirl!
 
@@ -50,8 +50,8 @@ import (
         "github.com/faiface/beep/mp3"
         "github.com/faiface/beep/speaker"
 
-        "github.com/taigrr/elevenlabs/client"
-        "github.com/taigrr/elevenlabs/client/types"
+        "github.com/johnnycyan/elevenlabs/client"
+        "github.com/johnnycyan/elevenlabs/client/types"
 )
 
 func main() {
