@@ -1,6 +1,6 @@
 module github.com/Johnnycyan/elevenlabs
 
-go 1.19
+go 1.22.4
 
 require github.com/faiface/beep v1.1.0
 
