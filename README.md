@@ -1,8 +1,8 @@
 # elevenlabs
-[![License 0BSD](https://img.shields.io/badge/License-0BSD-pink.svg)](https://opensource.org/licenses/0BSD)
+[![License MIT](https://img.shields.io/github/license/Johnnycyan/AI-Twitch-TTS?logo=opensourceinitiative&logoColor=white&color=0080ff)](https://opensource.org/licenses/MIT)
 [![GoDoc](https://godoc.org/github.com/Johnnycyan/elevenlabs?status.svg)](https://godoc.org/github.com/Johnnycyan/elevenlabs)
-[![Go Mod](https://img.shields.io/badge/go.mod-v1.20-blue)](go.mod)
-[![Go Report Card](https://goreportcard.com/badge/github.com/taigrr/elevenlabs?branch=master)](https://goreportcard.com/report/github.com/taigrr/elevenlabs)
+[![Go Mod](https://img.shields.io/badge/go.mod-v1.22.4-blue)](go.mod)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Johnnycyan/elevenlabs)](https://goreportcard.com/report/github.com/Johnnycyan/elevenlabs)
 
 
 Unofficial [elevenlabs.io](https://elevenlabs.io/) ([11.ai](http://11.ai)) voice synthesis client
